@@ -1,7 +1,4 @@
-import Clients from '../components/Clients';
-import Projects from '../components/Projects';
-import AddClientModal from '../components/AddClientModal';
-import AddProjectModal from '../components/AddProjectModal';
+import { Clients, AddClientModal, Projects, AddProjectModal } from '../components/pages/home/';
 
 export default function Home() {
   return (
