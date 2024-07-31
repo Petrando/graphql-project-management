@@ -7,10 +7,24 @@ const {
     GraphQLNonNull,
     GraphQLEnumType,
  } = require("graphql")
-const { projects, clients } = require("../sampleData.js")
+ import mongoose, { Document } from 'mongoose';
 
-const Project = require("../models/Project")
-const Client = require("../models/Client")
+ import Project from '../models/Project';
+ import Client from '../models/Client';
+
+interface ProjectDocument extends Document {
+    name: string;
+    description: string;
+    status: 'Not Started' | 'In Progress' | 'Completed';
+    clientId: mongoose.Schema.Types.ObjectId;
+}
+
+// Define the Client interface
+interface ClientDocument extends Document {
+    name: string;
+    email: string;
+    phone: string;
+}
 
 const ProjectType = new GraphQLObjectType({
     name: "Project",
@@ -21,7 +35,7 @@ const ProjectType = new GraphQLObjectType({
         status: { type: GraphQLString },
         client: {
             type: ClientType,
-            resolve(parent, args) {
+            resolve(parent: any, args: undefined) {
                 return Client.findById(parent.clientId)
             }
         }
@@ -43,27 +57,27 @@ const query = new GraphQLObjectType({
     fields: {
         projects: {
             type: new GraphQLList(ProjectType),
-            resolve(parent, args) {
+            resolve(parent: any, args: undefined) {
                 return Project.find();//projects
             },
         },
         project: {
             type: ProjectType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
+            resolve(parent: any, args:{ id:string }) {
                 return Project.findById(args.id);//projects.find(proj => proj.id === args.id)
             },
         },
         clients: {
             type: new GraphQLList(ClientType),
-            resolve(parent, args) {
+            resolve(parent: any, args: undefined) {
                 return Client.find();//clients
             },
         },
         client: {
             type: ClientType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
+            resolve(parent: any, args: { id: string }) {
                 return Client.findById(args.id);//clients.find(client => client.id === args.id)
             },
         },
@@ -82,7 +96,7 @@ const mutation = new GraphQLObjectType({
                 email: { type: new GraphQLNonNull(GraphQLString) },
                 phone: { type: new GraphQLNonNull(GraphQLString) },
             },
-            resolve(parent, args) {
+            resolve(parent: any, args: { name: string, email: string, phone: string }) {
                 const client = new Client({
                     name: args.name,
                     email: args.email,
@@ -99,14 +113,13 @@ const mutation = new GraphQLObjectType({
             args: {
                 id: { type: new GraphQLNonNull(GraphQLID) },
             },
-            resolve(parent, args) {
-                Project.find({ clientId: args.id }).then((projects) => {
-                    projects.forEach((project) => {
+            resolve(parent: any, args: { id: string }) {
+                Project.find({ clientId: args.id }).then((projects: ProjectDocument[]) => {
+                    projects.forEach((project: ProjectDocument) => {
                         project.deleteOne();
                     });
                 });
-        
-                console.log(args.id)
+                        
                 return Client.findByIdAndDelete(args.id);
             },
         },
@@ -129,7 +142,11 @@ const mutation = new GraphQLObjectType({
             },
             clientId: { type: new GraphQLNonNull(GraphQLID) },
             },
-            resolve(parent, args) {
+            resolve(
+                parent: any, 
+                args: { 
+                    name: string, description: string, status:'Not Started' | 'In Progress' | 'Completed', clientId: string 
+                }) {
                 const project = new Project({
                     name: args.name,
                     description: args.description,
@@ -146,7 +163,7 @@ const mutation = new GraphQLObjectType({
             args: {
                 id: { type: new GraphQLNonNull(GraphQLID) },
             },
-            resolve(parent, args) {
+            resolve(parent: any, args: { id: string }) {
                 return Project.findByIdAndDelete(args.id);
             },
         },
@@ -168,7 +185,7 @@ const mutation = new GraphQLObjectType({
                     }),
                 },
             },
-            resolve(parent, args) {
+            resolve(parent: any, args: { id: string, name: string, description: string, status: 'Not Started' | 'In Progress' | 'Completed' }) {
                 return Project.findByIdAndUpdate(
                     args.id,
                     {
