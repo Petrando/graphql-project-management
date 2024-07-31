@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, FC, FormEvent } from 'react';
 import { FaList } from 'react-icons/fa';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_PROJECT } from '../../../mutations/projectMutations';
 import { GET_PROJECTS } from '../../../queries/projectQueries';
 import { GET_CLIENTS } from '../../../queries/clientQueries';
+import { Client } from '../../../types';
 
-export default function AddProjectModal() {
+const AddProjectModal:FC = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [clientId, setClientId] = useState('');
@@ -14,7 +15,7 @@ export default function AddProjectModal() {
     const [addProject] = useMutation(ADD_PROJECT, {
         variables: { name, description, clientId, status },
         update(cache, { data: { addProject } }) {
-            const { projects } = cache.readQuery({ query: GET_PROJECTS });
+            const { projects }:{ projects: any[] } = cache.readQuery({ query: GET_PROJECTS })!;
             cache.writeQuery({
                 query: GET_PROJECTS,
                 data: { projects: [...projects, addProject] },
@@ -25,14 +26,14 @@ export default function AddProjectModal() {
     // Get Clients for select
     const { loading, error, data } = useQuery(GET_CLIENTS);
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (name === '' || description === '' || status === '') {
             return alert('Please fill in all fields');
         }
 
-        addProject(name, description, clientId, status);
+        addProject({ variables: {name, description, clientId, status}});
 
         setName('');
         setDescription('');
@@ -122,7 +123,7 @@ export default function AddProjectModal() {
                                         onChange={(e) => setClientId(e.target.value)}
                                     >
                                         <option value=''>Select Client</option>
-                                        {data.clients.map((client) => (
+                                        {data.clients.map((client:Client) => (
                                         <option key={client.id} value={client.id}>
                                             {client.name}
                                         </option>
@@ -147,3 +148,5 @@ export default function AddProjectModal() {
         </>
     );
 }
+
+export default AddProjectModal

@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, FC, FormEvent } from 'react';
 import { FaUser } from 'react-icons/fa';
 import { useMutation } from '@apollo/client';
 import { ADD_CLIENT } from '../../../mutations/clientMutations';
 import { GET_CLIENTS } from '../../../queries/clientQueries';
 
-export default function AddClientModal() {
+const AddClientModal:FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -12,7 +12,7 @@ export default function AddClientModal() {
   const [addClient] = useMutation(ADD_CLIENT, {
     variables: { name, email, phone },
     update(cache, { data: { addClient } }) {
-      const { clients } = cache.readQuery({ query: GET_CLIENTS });
+      const { clients }: { clients: any[] } = cache.readQuery({ query: GET_CLIENTS })!;
 
       cache.writeQuery({
         query: GET_CLIENTS,
@@ -21,14 +21,14 @@ export default function AddClientModal() {
     },
   });
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (name === '' || email === '' || phone === '') {
       return alert('Please fill in all fields');
     }
 
-    addClient(name, email, phone);
+    addClient({ variables: { name, email, phone } });
 
     setName('');
     setEmail('');
@@ -116,3 +116,5 @@ export default function AddClientModal() {
     </>
   );
 }
+
+export default AddClientModal

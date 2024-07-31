@@ -1,6 +1,7 @@
+import { FC } from "react"
 import logo from './assets/logo.png';
 
-export default function Header() {
+const Header:FC = () => {
     return (
         <nav className='navbar bg-light mb-4 p-0'>
             <div className='container'>
@@ -14,3 +15,5 @@ export default function Header() {
         </nav>
     );
 }
+
+export default Header
