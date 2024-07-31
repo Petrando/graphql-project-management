@@ -7,7 +7,7 @@ import { GET_PROJECTS } from '../../../queries/projectQueries';
 import { Client  } from '../../../types';
 
 type tClientRow = {
-    client: Client
+    client: Client;
 }
 
 const ClientRow:FC<tClientRow> = ({ client: {id, name, email, phone} }) => {

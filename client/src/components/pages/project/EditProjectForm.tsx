@@ -1,9 +1,11 @@
+import { FC, FormEvent } from "react"
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { GET_PROJECT } from "../../../queries/projectQueries";
 import { UPDATE_PROJECT } from "../../../mutations/projectMutations";
+import { Project } from "../../../types";
 
-export default function EditProjectForm({ project }) {
+export default function EditProjectForm({ project }:{project: Project}) {
     const [name, setName] = useState(project.name);
     const [description, setDescription] = useState(project.description);
     const [status, setStatus] = useState(() => {
@@ -24,14 +26,14 @@ export default function EditProjectForm({ project }) {
         refetchQueries: [{ query: GET_PROJECT, variables: { id: project.id } }],
     });
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!name || !description || !status) {
             return alert("Please fill out all fields");
         }
 
-        updateProject(name, description, status);
+        updateProject({ variables: { name, description, status }});
     };
 
     return (

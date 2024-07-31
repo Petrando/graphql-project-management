@@ -1,8 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
 import Spinner from '../components/Spinner';
-import { ClientInfo, DeleteProjectButton, EditProjectForm } from '../components/pages/project/';
+import { ClientInfo, DeleteProjectButton, EditProjectForm } from '../components/pages/project';
 import { useQuery } from '@apollo/client';
 import { GET_PROJECT } from '../queries/projectQueries';
+import { Client  } from '../types';
 
 export default function Project() {
   const { id } = useParams();
