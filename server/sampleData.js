@@ -75,4 +75,4 @@ const clients = [
     },
 ];
   
-  module.exports = { projects, clients };
+module.exports = { projects, clients };
