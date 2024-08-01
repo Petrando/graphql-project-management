@@ -9,6 +9,6 @@
     "outDir": "./dist", // Ensure to add this to specify the output directory
     "rootDir": "./" // Ensure to add this to specify the root directory for the sources
   },
-  "include": ["./*.ts"], // Adjusted path to include .ts files directly under the directory
-  "exclude": ["node_modules", "**/*.test.ts"]
+  "include": ["./*.ts"],//["index.ts"], // Adjusted path to include .ts files directly under the directory
+  "exclude": ["node_modules", "**/*.test.ts"]//["node_modules", "dist"]
 }
