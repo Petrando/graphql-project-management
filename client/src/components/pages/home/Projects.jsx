@@ -8,7 +8,7 @@ export default function Projects() {
 
     if (loading) return <Spinner />;
     if (error) return <p>Something Went Wrong</p>;
-
+    
     return (
         <>
         {data.projects.length > 0 ? (

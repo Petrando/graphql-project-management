@@ -1,7 +1,12 @@
 import { FC } from "react"
 import { Project } from "../../../types"
 
-const ProjectCard:FC<Project> = ({ id, name, status }) => {
+type tProjectCard = {
+    project: Project;
+}
+
+const ProjectCard:FC<tProjectCard> = ({ project: { id, name, status } }) => {
+    
     return (
         <div className='col-md-6'>
             <div className='card mb-3'>
