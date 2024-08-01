@@ -20,7 +20,7 @@ export default function Clients() {
     if (error) return <p>Something Went Wrong</p>;
     
     const clientToDelete = data.clients.find((d: Client) => { return d.id === idToDelete})
-    console.log(clientToDelete)
+    
     return (
         <>
         {!loading && !error && (
